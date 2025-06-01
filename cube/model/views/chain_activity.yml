@@ -1,0 +1,12 @@
+views:
+  - name: chain_activity_view
+    cubes:
+      - join_path: chain_activity
+        includes:
+          - activity_date
+          - activity_month
+          - activity_hour
+          - activity_type
+          - from_address # Useful for drilling down, though maybe not directly in a high-level chart
+          - event_count
+          - new_wallets_count 

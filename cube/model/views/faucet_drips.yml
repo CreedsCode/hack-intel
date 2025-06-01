@@ -1,0 +1,10 @@
+views:
+  - name: faucet_drips_view
+    cubes:
+      - join_path: faucet_drips
+        includes:
+          - drip_date
+          - drip_month
+          - drip_hour
+          - count
+          - total_amount_dripped 

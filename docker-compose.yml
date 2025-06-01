@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${PORT:-80}:80"
+    environment:
+      - VITE_APP_TITLE=${VITE_APP_TITLE:-HackVision Analytics}
+      - VITE_CUBE_API_URL=${VITE_CUBE_API_URL:-http://localhost:4000}
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:4000}
+      - NODE_ENV=${NODE_ENV:-development}
+    depends_on:
+      - cube
+      - postgres
+
+  init:
+    build:
+      context: ./init
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - UNTIL_TIMESTAMP=${UNTIL_TIMESTAMP:-2025-05-28}
+      - BLOCKSCOUT_API_URL=${BLOCKSCOUT_API_URL:-https://rootstock-testnet.blockscout.com/api/v2/transactions}
+      - BLOCKSCOUT_API_KEY=${BLOCKSCOUT_API_KEY}
+      # Internal database connection
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=hackvision
+      - DB_USER=hackvision
+      - DB_PASSWORD=hackvision123
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=hackvision
+      - POSTGRES_PASSWORD=hackvision123
+      - POSTGRES_DB=hackvision
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hackvision"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  cube:
+    image: cubejs/cube:v1.3.18
+    ports:
+      - "${CUBEJS_PORT:-4000}:4000"
+    env_file: cube/.env
+    volumes:
+      - ./cube:/cube/conf
+      # We ignore Cube deps, because they are built-in inside the official Docker image
+      - .empty:/cube/conf/node_modules/@cubejs-backend/
+    depends_on:
+      - postgres
+    environment:
+      # Database connection (internal)
+      - CUBEJS_DB_TYPE=postgres
+      - CUBEJS_DB_HOST=postgres
+      - CUBEJS_DB_NAME=hackvision
+      - CUBEJS_DB_USER=hackvision
+      - CUBEJS_DB_PASS=hackvision123
+      # Additional Cube.js settings from their docker-compose
+      - CUBEJS_API_SECRET=${CUBEJS_API_SECRET:-your-secret-key}
+      - CUBEJS_DEV_MODE=${CUBEJS_DEV_MODE:-true}
+      - CUBEJS_SCHEDULED_REFRESH_TIMER=true
+      - CUBEJS_REFRESH_WORKER=true
+      - CUBEJS_CACHE_AND_QUEUE_DRIVER=memory
+      - CUBEJS_TELEMETRY=false
+
+volumes:
+  postgres_data:

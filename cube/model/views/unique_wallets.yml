@@ -1,0 +1,7 @@
+views:
+  - name: unique_wallets_view
+    cubes:
+      - join_path: unique_wallets
+        includes:
+          - observation_date
+          - total_unique_address_count 

@@ -1,0 +1,9 @@
+views:
+  - name: total_gas_spent_view
+    cubes:
+      - join_path: total_gas_spent
+        includes:
+          - gas_spent_date
+          - gas_spent_month
+          - gas_spent_hour
+          - total_gas_in_native_token 

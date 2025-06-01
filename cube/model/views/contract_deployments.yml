@@ -1,0 +1,9 @@
+views:
+  - name: contract_deployments_view
+    cubes:
+      - join_path: contract_deployments
+        includes:
+          - deployment_date
+          - deployment_month
+          - is_verified
+          - count 

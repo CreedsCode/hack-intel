@@ -1,0 +1,10 @@
+views:
+  - name: peak_activity_time_view
+    cubes:
+      - join_path: peak_activity_time
+        includes:
+          # - activity_timestamp_raw # Usually not needed for aggregated peak analysis
+          - activity_minute
+          - activity_hour
+          - activity_day
+          - transaction_count 
