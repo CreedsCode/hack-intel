@@ -77,7 +77,6 @@ services:
       - CUBEJS_CACHE_AND_QUEUE_DRIVER=memory
       - CUBEJS_TELEMETRY=false
       - CUBEJS_EXTERNAL_DEFAULT=true
-      - CUBEJS_API_URL=${VITE_CUBE_API_URL}
 
 volumes:
   postgres_data:
