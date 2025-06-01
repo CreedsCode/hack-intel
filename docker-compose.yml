@@ -64,6 +64,7 @@ services:
     env_file: cube/.env
     volumes:
       - ./cube:/cube/conf
+      - ./cube/cube.js:/cube/conf/cube.js
       # We ignore Cube deps, because they are built-in inside the official Docker image
       - .empty:/cube/conf/node_modules/@cubejs-backend/
     depends_on:
