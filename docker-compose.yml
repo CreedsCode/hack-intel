@@ -7,14 +7,14 @@ services:
       dockerfile: Dockerfile
       args:
         - VITE_APP_TITLE=${VITE_APP_TITLE:-HackVision Analytics}
-        - VITE_CUBE_API_URL=${VITE_CUBE_API_URL}
+        - VITE_CUBE_API_URL=${VITE_CUBE_API_URL}/cubejs-api/v1
         - VITE_API_BASE_URL=${VITE_API_BASE_URL}
         - NODE_ENV=${NODE_ENV:-development}
     ports:
       - "${FRONTEND_PORT:-8581}:80"
     environment:
       - VITE_APP_TITLE=${VITE_APP_TITLE:-HackVision Analytics}
-      - VITE_CUBE_API_URL=${VITE_CUBE_API_URL}
+      - VITE_CUBE_API_URL=${VITE_CUBE_API_URL}/cubejs-api/v1
       - VITE_API_BASE_URL=${VITE_API_BASE_URL}
       - NODE_ENV=${NODE_ENV:-development}
     depends_on:
